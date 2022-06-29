@@ -23,7 +23,8 @@ class TranslationsFile {
 
 	Set(key){
 		let url = url_set_missing_key + key;
-		let json = axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
+		//let json = axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
+	
 	}
 }
 

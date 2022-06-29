@@ -79,8 +79,10 @@ function ParseCommandLine() {
     }
     else if (cmdLine.args.length > 0 && cmdLine.args[0] == 'serve') {
         cmdLine.isServing = true;
-        if (cmdLine.outDir.startsWith('/') == false)
+        if (cmdLine.outDir.startsWith('/') == false){
+            
             cmdLine.outDir = Path.join(__dirname, cmdLine.outDir);
+        }
 
         cmdLine.entryFiles = []
         let vFiles = fs.readdirSync(cmdLine.outDir)
@@ -94,8 +96,9 @@ function ParseCommandLine() {
     cmdLine.args = cmdLine.args.slice(1);
     cmdLine.entryFiles = []
     for (let i = 0; i < cmdLine.args.length; i++) {
-        cmdLine.entryFiles.push(Path.join(__dirname, cmdLine.args[i]))
+        cmdLine.entryFiles.push(Path.join(process.cwd(), cmdLine.args[i]))
     }
+    console.log(cmdLine.entryFiles)
     return cmdLine
 }
 
@@ -385,8 +388,10 @@ class Translations {
             parcel.hmr.emitUpdate([], true)
         });
     }
-    if (cmdLine.isServing != true)
+
+    if (cmdLine.isServing != true){
         await parcel.serve(parseInt(1233));
+    }
 
     let entries = ['/', '/index.html'];
     entryFiles.forEach((el) => {
@@ -397,7 +402,6 @@ class Translations {
     for (let i = 0; i < entries.length; i++) {
         entries[i] = urljoin(parcel.options.publicURL, entries[i]);
     }
-
     let app = express();
     app.use(cookieParser())
     app.get(entries, async (req, res) => {
@@ -428,6 +432,10 @@ class Translations {
         }
         else
             file = entryFiles[0].replace(__dirname, "")
+
+        console.log(parcel.options.outDir)
+        let pathfile = file.split('/')
+        file = pathfile[pathfile.length - 1];
         let data = fs.readFileSync(Path.join(parcel.options.outDir, file), 'utf-8')
         let DataOut = ""
         try {
