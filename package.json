@@ -2,7 +2,7 @@
   "name": "@camtv/camtv-builder",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./builder.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./builder.js dev ./test.html --public-url /develop --hmr-port 12345"
@@ -35,5 +35,8 @@
   "bugs": {
     "url": "https://github.com/camtv/camtv-builder/issues"
   },
-  "homepage": "https://github.com/camtv/camtv-builder#readme"
+  "homepage": "https://github.com/camtv/camtv-builder#readme",
+  "bin":{
+    "builder": "./builder.js"
+  }
 }
