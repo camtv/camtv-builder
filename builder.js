@@ -223,7 +223,6 @@ class Translations {
                     return this.TranslationData.Translations[i][Ln];
             }
         }
-
         this.TranslationsFile.Set(Str);
 
         return Str;

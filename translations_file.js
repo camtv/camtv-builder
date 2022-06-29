@@ -10,20 +10,20 @@ class TranslationsFile {
             "KeyLang": "key",
             "Translations": []
         }
+		this.agent = new https.Agent({
+			rejectUnauthorized: false
+		});
     }
 
 	async Get() {
-		const agent = new https.Agent({
-			rejectUnauthorized: false
-		});
-
-		let json = await axios(url_download, { headers: { 'Accept': 'application/json' }, httpsAgent: agent })
+		let json = await axios(url_download, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
 		this.Data.Translations = json.data;
 		return this.Data;
 	}
 
-	async Set(key){
-		let json = await axios(url_set_missing_key +key, { headers: { 'Accept': 'application/json' }, httpsAgent: agent })
+	Set(key){
+		let url = url_set_missing_key + key;
+		let json = axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
 	}
 }
 
