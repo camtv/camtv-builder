@@ -18,11 +18,7 @@ class TranslationsFile {
 		});
 
 		let json = await axios(url_download, { headers: { 'Accept': 'application/json' }, httpsAgent: agent })
-
-	
 		this.Data.Translations = json.data;
-		console.log("JSON")
-		console.log(this.Data);
 		return this.Data;
 	}
 

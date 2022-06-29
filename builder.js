@@ -213,10 +213,6 @@ class Translations {
     }
 
     _Ts(Str, Ln) {
-
-        console.log(Str);
-        console.log(this.TranslationData.Translations);
-        console.log(Object.keys(this.TranslationData.Translations).length);
         
         if (!this.TranslationData.Translations || Object.keys(this.TranslationData.Translations).length == 0)
             return Str;

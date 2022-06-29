@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./builder.js dev ./test.html --public-url /develop --hmr-port 12345"
-
   },
   "repository": {
     "type": "git",
