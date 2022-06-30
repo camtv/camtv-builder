@@ -98,7 +98,6 @@ function ParseCommandLine() {
     for (let i = 0; i < cmdLine.args.length; i++) {
         cmdLine.entryFiles.push(Path.join(process.cwd(), cmdLine.args[i]))
     }
-    console.log(cmdLine.entryFiles)
     return cmdLine
 }
 
@@ -244,7 +243,6 @@ class Translations {
                 value = `{%|${variable}|%}`;
             else
                 value = variable;
-
             if (text.indexOf(tag) == -1)
                 Logger.Warning("Missing parameter inside text: " + text);
             text = text.replace(tag, value);
@@ -433,7 +431,6 @@ class Translations {
         else
             file = entryFiles[0].replace(__dirname, "")
 
-        console.log(parcel.options.outDir)
         let pathfile = file.split('/')
         file = pathfile[pathfile.length - 1];
         let data = fs.readFileSync(Path.join(parcel.options.outDir, file), 'utf-8')
@@ -464,7 +461,6 @@ class Translations {
             let data_out_ts = translator.TranslateText(data_out, ln.toLocaleLowerCase(), file)
             let tpl = await engine.parse(data_out_ts)
             DataOut = await engine.render(tpl, RenderData, liquidOptions);
-
         }
         catch (Ex) {
             console.log(Ex)
