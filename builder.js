@@ -361,8 +361,9 @@ class Translations {
     }
 
     let TemplateDataFilePath = cmdLine.templateData;
+    
     if (TemplateDataFilePath.startsWith("/") == false)
-        TemplateDataFilePath = Path.join(__dirname, cmdLine.templateData);
+        TemplateDataFilePath = Path.join(process.cwd(), cmdLine.templateData);
     let TemplateData = null;
     if (fs.existsSync(TemplateDataFilePath)) {
         try {
