@@ -13,21 +13,19 @@
   },
   "dependencies": {
     "axios": "^0.21.4",
-    "liquidjs": "^9.28.3"
-  },
-  "devDependencies": {
+    "liquidjs": "^9.28.3",
+    "express": "^4.17.1",
+    "parcel-bundler": "^1.12.5",
+    "posthtml-inline-assets": "^3.1.0",
+    "url-join": "^4.0.1",
     "commander": "^6.2.1",
     "cookie-parser": "^1.4.5",
     "css-purge": "^3.1.8",
-    "express": "^4.17.1",
     "fs-extra": "^10.0.0",
-    "parcel-bundler": "^1.12.5",
     "posthtml": "^0.15.2",
-    "posthtml-inline-assets": "^3.1.0",
     "recursive-readdir": "^2.2.2",
     "replaceall": "^0.1.6",
-    "rimraf": "^3.0.2",
-    "url-join": "^4.0.1"
+    "rimraf": "^3.0.2"
   },
   "author": "",
   "license": "ISC",
