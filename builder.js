@@ -129,8 +129,8 @@ class Translations {
     async Process(TranslateCacheDir, OutDir, publicUrl) {
 
         if (OutDir.startsWith("./"))
-            OutDir = Path.join(__dirname, OutDir)
-
+            OutDir = Path.join(process.cwd(), OutDir)
+        
         rimraf.sync(OutDir)
         if (!fs.existsSync(OutDir))
             fs.mkdirSync(OutDir);
@@ -342,7 +342,7 @@ class Translations {
                                     }
                                     else
                                         fnSetNode(node, InCssString)
-
+                                        
                                 }
                             }
                         },
