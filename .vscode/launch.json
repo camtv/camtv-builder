@@ -12,9 +12,7 @@
 				"<node_internals>/**"
 			],
 			"program": "builder.js",
-			"args": [ "dev","./test/test.html","-c", "./test/template_data.js"],
-
-
+			"args": [ "dev","./test/test.html","-c", "./test/template_data.js", "--translations-url", "https://hook.eu1.make.com/fkg74gk5r4pkk974939xaifaf3y3wsvi"]
 			//./builder.js dev ./test/test.html -c ./test/template_data.js --public-url /develop --hmr-port 12345
 		}
 	]

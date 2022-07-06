@@ -3,9 +3,11 @@
   "version": "1.0.6",
   "description": "",
   "main": "./builder.js",
+  "translation_url": "https://hook.eu1.make.com/fkg74gk5r4pkk974939xaifaf3y3wsvi",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./builder.js dev ./test/test.html -c ./test/template_data.js --public-url /develop --hmr-port 12345"
+    "dev": "./builder.js dev ./test/test.html -c ./test/template_data.js --public-url /develop --hmr-port 12345  --translations-url $npm_package_translation_url",
+    "release": "./builder.js release ./test/test.html -c ./test/template_data.js --public-url /develop --hmr-port 12345  --translations-url $npm_package_translation_url"
   },
   "repository": {
     "type": "git",

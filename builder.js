@@ -70,6 +70,7 @@ function ParseCommandLine() {
     cmdLine.option('-r, --hmr-port <http_port>', 'WS port where to listen when in dev mode for autoreload', 12345)
     cmdLine.option('-n, --hmr-hostname <hmr_hostname>', 'Hostname when in dev mode for autoreload', '')
     cmdLine.option('-ic, --inline-css <css_inline_mode>', 'inline cssmode, purge to purge, no-purge to avoid purging', '')
+    cmdLine.option('-td, --translations-url <translations_url>', 'Url that get/set the translation file')
 
     cmdLine.parse(process.argv);
 
@@ -115,8 +116,8 @@ class Translations {
         return this.TranslationData.Translations.length > 0
     }
 
-    async LoadTranslations() {
-        this.TranslationsFile = new TranslationsFile();
+    async LoadTranslations(url) {
+        this.TranslationsFile = new TranslationsFile(url);
         this.TranslationData = await this.TranslationsFile.Get();
 
         /*
@@ -153,13 +154,15 @@ class Translations {
                 files.forEach((file) => {
                     this.ProcessFile(ln, file, file, publicUrl)
                 })
+                this.TranslationsFile.UpdateMissingKeys();
+
             }
             catch (ex) {
                 console.log(ex)
             }
         })
 
-
+        
     }
 
     ProcessFile(lang, fileNameInput, fileNameOutput, publicUrl) {
@@ -264,7 +267,7 @@ class Translations {
     let translator = new Translations();
     let OutDir = cmdLine.outDir;
 
-    await translator.LoadTranslations();
+    await translator.LoadTranslations(cmdLine.translationsUrl);
     if (translator.HasTranslations == true) {
         OutDir = Path.join(__dirname, "translation_cache")
     }
@@ -349,14 +352,16 @@ class Translations {
                             }
                         },
                     })]).process(data);
+                    
                     fs.writeFileSync(bundle.name, result.html);
                 }));
             });
         }
         await parcel.bundle();
 
-        if (translator.HasTranslations == true)
+        if (translator.HasTranslations == true){
             await translator.Process(OutDir, cmdLine.outDir, cmdLine.publicUrl);
+        }
         // Sostituisce i file css portandoli inline
         //<link rel="stylesheet" href="/revisione_canale_esterno/candidate/blog_wall.10f38aa3.css">
         return;
@@ -403,6 +408,9 @@ class Translations {
     for (let i = 0; i < entries.length; i++) {
         entries[i] = urljoin(parcel.options.publicURL, entries[i]);
     }
+
+
+
     let app = express();
     app.use(cookieParser())
     app.get(entries, async (req, res) => {
@@ -469,6 +477,7 @@ class Translations {
             console.log(Ex)
             parcel.hmr.emitError(Ex);
         }
+
         res.send(DataOut);
     });
 
