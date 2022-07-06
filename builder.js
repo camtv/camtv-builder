@@ -175,7 +175,9 @@ class Translations {
 
         let text = fs.readFileSync(fileNameInput, 'utf8')
         text = this.TranslateText(text, lang, fileNameInput)
-        text = replaceall(publicUrl, publicUrlWithLang, text)
+        
+        if(publicUrl != '')
+            text = replaceall(publicUrl, publicUrlWithLang, text)
         fs.writeFileSync(fileNameOutput, text)
     }
 
