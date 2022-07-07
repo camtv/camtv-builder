@@ -43,7 +43,6 @@ class TranslationsFile {
 	SetMissing(key){
 		if(this.missingKeys.includes(key) == false){
 			var hasKey = this.Data.Translations.some(function(element) {
-				console.log(element.key + " compare "+ key)
 				if(element.key == key){
 					return true;
 				}
