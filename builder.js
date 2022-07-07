@@ -155,6 +155,7 @@ class Translations {
                     this.ProcessFile(ln, file, file, publicUrl)
                 })
                 this.TranslationsFile.UpdateMissingKeys();
+                this.TranslationsFile.UpdateUsedKeys();
 
             }
             catch (ex) {
@@ -226,11 +227,13 @@ class Translations {
 
         for (let i = 0; i < this.TranslationData.Translations.length; i++) {
             if (this.TranslationData.Translations[i][this.TranslationData.KeyLang] == Str) {
-                if (this.TranslationData.Translations[i][Ln] != null)
+                if (this.TranslationData.Translations[i][Ln] != null){
+                    this.TranslationsFile.SetUsed(this.TranslationData.Translations[i][this.TranslationData.KeyLang]);
                     return this.TranslationData.Translations[i][Ln];
+                }
             }
         }
-        this.TranslationsFile.Set(Str);
+        this.TranslationsFile.SetMissing(Str);
 
         return Str;
     }

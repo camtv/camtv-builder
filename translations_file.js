@@ -6,7 +6,10 @@ class TranslationsFile {
     constructor(url) {
 		this.url = url
 		this.missingKeys = [];
+		this.usedKeys = [];
 		this.missingKeysUpdate = false;
+		this.usedKeysUpdate = false;
+		
         this.Data = {
             "Langs": ["it","en","key"],
             "KeyLang": "key",
@@ -27,7 +30,15 @@ class TranslationsFile {
 		return this.Data;
 	}
 
-	Set(key){
+	SetUsed(key){
+		console.log("Used KEY")
+		console.log(key)
+		if(this.usedKeys.includes(key) == false){
+			this.usedKeys.push(key)
+		}
+	}
+
+	SetMissing(key){
 		if(this.missingKeys.includes(key) == false){
 			if(! (key in this.Data.Translations)){
 				this.missingKeys.push(key)
@@ -51,11 +62,32 @@ class TranslationsFile {
 					}catch (ex) {
 						console.log("UpdateMissingKeys failed: "+ ex)
 					}
-
 				}
-
 			}else{
 				console.log("Cannot set Missing Translation Key: "+keys)
+			}
+		}
+	}
+
+	UpdateUsedKeys(){
+		if(this.usedKeys.length>0){
+			var keys = this.usedKeys.join(",");
+			if(this.url != null && this.url != ''){
+				if(this.usedKeysUpdate == false){
+					this.usedKeysUpdate = true
+					try{
+						let url = this.url + "?ukey=" + encodeURIComponent(keys);
+						if(url.length <= 2048){
+							let json = axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
+						}else{
+							console.log("UpdateUsedKeys failed: too much keys missing")
+						}
+					}catch (ex) {
+						console.log("UpdateUsedKeys failed: "+ ex)
+					}
+				}
+			}else{
+				console.log("Cannot set Used Translation Key: "+keys)
 			}
 		}
 	}
