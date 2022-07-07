@@ -301,8 +301,7 @@ class Translations {
         autoInstall: true, // Enable or disable auto install of missing dependencies found during bundling
     };
 
-    if (IsProduction == false)
-        option.hmr = cmdLine.useHmr;
+
 
     // Initializes a bundler using the entrypoint location and options provided
     const parcel = new ParcelJs(entryFiles, option);
@@ -310,6 +309,14 @@ class Translations {
 
     if (parcel.options.publicURL == null || parcel.options.publicURL == "")
         parcel.options.publicURL = "/";
+
+    if (IsProduction == false){
+        if(cmdLine.useHmr == 'false'){
+            parcel.options.hmr = false;
+            parcel.options.hmrPort = null;
+            parcel.options.hmrHostname = null;
+        }
+    }
 
     if (IsProduction == true) {
 
