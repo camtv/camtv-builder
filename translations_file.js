@@ -22,8 +22,12 @@ class TranslationsFile {
 
 	async Get() {
 		if(this.url != null && this.url != ''){
-			let json = await axios(this.url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
-			this.Data.Translations = json.data;
+			try{
+				let json = await axios(this.url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
+				this.Data.Translations = json.data;
+			}catch (ex) {
+				console.log("Error on get translations file")
+			}
 		}else{
 			console.log("Missing --translations-url-download parameter")
 		}
@@ -31,8 +35,6 @@ class TranslationsFile {
 	}
 
 	SetUsed(key){
-		console.log("Used KEY")
-		console.log(key)
 		if(this.usedKeys.includes(key) == false){
 			this.usedKeys.push(key)
 		}
@@ -78,7 +80,7 @@ class TranslationsFile {
 					try{
 						let url = this.url + "?ukey=" + encodeURIComponent(keys);
 						if(url.length <= 2048){
-							let json = axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
+							axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
 						}else{
 							console.log("UpdateUsedKeys failed: too much keys missing")
 						}
