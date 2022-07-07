@@ -42,7 +42,14 @@ class TranslationsFile {
 
 	SetMissing(key){
 		if(this.missingKeys.includes(key) == false){
-			if(! (key in this.Data.Translations)){
+			var hasKey = this.Data.Translations.some(function(element) {
+				console.log(element.key + " compare "+ key)
+				if(element.key == key){
+					return true;
+				}
+			});
+
+			if(hasKey == false){
 				this.missingKeys.push(key)
 			}
 		}		
