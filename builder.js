@@ -68,6 +68,7 @@ function ParseCommandLine() {
     cmdLine.option('-u, --public-url <public_url>', 'Public url, or relative path', '/')
     cmdLine.option('-p, --port <http_port>', 'HTTP port where to listen when in dev mode', 1234)
     cmdLine.option('-r, --hmr-port <http_port>', 'WS port where to listen when in dev mode for autoreload', 12345)
+    cmdLine.option('-nh, --use-hmr <use_hmr>', 'set hrm used by parcel to false', true)
     cmdLine.option('-n, --hmr-hostname <hmr_hostname>', 'Hostname when in dev mode for autoreload', '')
     cmdLine.option('-ic, --inline-css <css_inline_mode>', 'inline cssmode, purge to purge, no-purge to avoid purging', '')
     cmdLine.option('-td, --translations-url <translations_url>', 'Url that get/set the translation file')
@@ -299,6 +300,9 @@ class Translations {
         detailedReport: IsProduction == true, // Prints a detailed report of the bundles, assets, filesizes and times, defaults to false, reports are only printed if watch is disabled
         autoInstall: true, // Enable or disable auto install of missing dependencies found during bundling
     };
+
+    if (IsProduction == false)
+        option.hmr = cmdLine.useHmr;
 
     // Initializes a bundler using the entrypoint location and options provided
     const parcel = new ParcelJs(entryFiles, option);
