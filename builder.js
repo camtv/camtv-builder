@@ -72,6 +72,9 @@ function ParseCommandLine() {
     cmdLine.option('-n, --hmr-hostname <hmr_hostname>', 'Hostname when in dev mode for autoreload', '')
     cmdLine.option('-ic, --inline-css <css_inline_mode>', 'inline cssmode, purge to purge, no-purge to avoid purging', '')
     cmdLine.option('-td, --translations-url <translations_url>', 'Url that get/set the translation file')
+    cmdLine.option('-tk, --translations-key <translations_key>', 'the key used by the sistem to pair the string in the code with the translated string', 'key')
+    cmdLine.option('-trk, --translations-remove-key <translations_remove_key>', 'a boolean value used to indicate if the key need to be removed from the lang list', true)
+    cmdLine.option('-dl, --default-language <default_language>', 'default language that is used for all languages that has no translation', 'en')
 
     cmdLine.parse(process.argv);
 
@@ -117,8 +120,8 @@ class Translations {
         return this.TranslationData.Translations.length > 0
     }
 
-    async LoadTranslations(url) {
-        this.TranslationsFile = new TranslationsFile(url);
+    async LoadTranslations(url, key, removeKey) {
+        this.TranslationsFile = new TranslationsFile(url, key, removeKey);
         this.TranslationData = await this.TranslationsFile.Get();
 
         /*
@@ -128,7 +131,7 @@ class Translations {
         */
     }
 
-    async Process(TranslateCacheDir, OutDir, publicUrl) {
+    async Process(TranslateCacheDir, OutDir, publicUrl, defaultLanguage) {
 
         if (OutDir.startsWith("./"))
             OutDir = Path.join(process.cwd(), OutDir)
@@ -143,8 +146,15 @@ class Translations {
             try {
 
                 let source = TranslateCacheDir
-                let destination = Path.join(OutDir, ln);
+
+                var destination = Path.join(OutDir, "localized-files");
                 
+                //rimraf.sync(destination)
+                if (!fs.existsSync(destination))
+                    fs.mkdirSync(destination);
+
+                destination = Path.join(destination, ln);
+
                 rimraf.sync(destination)
                 if (!fs.existsSync(destination))
                     fs.mkdirSync(destination);
@@ -157,6 +167,11 @@ class Translations {
                 })
                 this.TranslationsFile.UpdateMissingKeys();
                 this.TranslationsFile.UpdateUsedKeys();
+
+                if(ln == defaultLanguage){
+                    fse.copySync(destination, OutDir)
+
+                }
 
             }
             catch (ex) {
@@ -271,7 +286,7 @@ class Translations {
     let translator = new Translations();
     let OutDir = cmdLine.outDir;
 
-    await translator.LoadTranslations(cmdLine.translationsUrl);
+    await translator.LoadTranslations(cmdLine.translationsUrl, cmdLine.translationsKey, cmdLine.translationsRemoveKey);
     if (translator.HasTranslations == true) {
         OutDir = Path.join(__dirname, "translation_cache")
     }
@@ -374,7 +389,7 @@ class Translations {
         await parcel.bundle();
 
         if (translator.HasTranslations == true){
-            await translator.Process(OutDir, cmdLine.outDir, cmdLine.publicUrl);
+            await translator.Process(OutDir, cmdLine.outDir, cmdLine.publicUrl, cmdLine.defaultLanguage);
         }
         // Sostituisce i file css portandoli inline
         //<link rel="stylesheet" href="/revisione_canale_esterno/candidate/blog_wall.10f38aa3.css">
@@ -384,7 +399,9 @@ class Translations {
     let TemplateDataFilePath = cmdLine.templateData;
     
     if (TemplateDataFilePath.startsWith("/") == false)
-        TemplateDataFilePath = Path.join(process.cwd(), cmdLine.templateData);
+        TemplateDataFilePath = Path.join(__dirname, cmdLine.templateData);
+    
+    //TemplateDataFilePath = Path.join(process.cwd(), cmdLine.templateData);
     let TemplateData = null;
     if (fs.existsSync(TemplateDataFilePath)) {
         try {

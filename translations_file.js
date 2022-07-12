@@ -3,16 +3,16 @@ const https = require('https');
 
 class TranslationsFile {
 
-    constructor(url) {
+    constructor(url, KeyLang = "key", removeKeyLang = true) {
 		this.url = url
 		this.missingKeys = [];
 		this.usedKeys = [];
 		this.missingKeysUpdate = false;
 		this.usedKeysUpdate = false;
-		
+		this.removeKeyLang = removeKeyLang;
         this.Data = {
-            "Langs": ["it","en","key"],
-            "KeyLang": "key",
+            "Langs": [],
+            "KeyLang": KeyLang,
             "Translations": []
         }
 		this.agent = new https.Agent({
@@ -24,9 +24,18 @@ class TranslationsFile {
 		if(this.url != null && this.url != ''){
 			try{
 				let json = await axios(this.url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
+				let kvLang = json.data[0];
+				this.Data.Langs = Object.values(kvLang)
+
+				if(this.removeKeyLang){
+					this.Data.Langs = this.Data.Langs.filter(v => v !== this.Data.KeyLang); 
+				}
+
+				json.data.splice(0,1)
+
 				this.Data.Translations = json.data;
 			}catch (ex) {
-				console.log("Error on get translations file")
+				console.log("Error on get translations file: "+ex)
 			}
 		}else{
 			console.log("Missing --translations-url-download parameter")
