@@ -78,6 +78,7 @@ class TranslationsFile {
 						}
 					}catch (ex) {
 						console.log("UpdateMissingKeys failed: "+ ex)
+						console.log(this.missingKeys);
 					}
 				}
 			}else{

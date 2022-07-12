@@ -503,12 +503,14 @@ class Translations {
             let data_out_ts = translator.TranslateText(data_out, ln.toLocaleLowerCase(), file)
             let tpl = await engine.parse(data_out_ts)
             DataOut = await engine.render(tpl, RenderData, liquidOptions);
-            this.TranslationsFile.UpdateMissingKeys();
-            this.TranslationsFile.UpdateUsedKeys();
+            translator.TranslationsFile.UpdateMissingKeys();
+            translator.TranslationsFile.UpdateUsedKeys();
         }
         catch (Ex) {
             console.log(Ex)
-            parcel.hmr.emitError(Ex);
+            
+            if(parcel.hmr != null)
+                parcel.hmr.emitError(Ex);
         }
 
         res.send(DataOut);
