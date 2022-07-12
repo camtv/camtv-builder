@@ -206,7 +206,9 @@ class Translations {
 
         // Controllo che la lingua selezionata sia disponibile
         if (!this.TranslationData.Langs || this.TranslationData.Langs.indexOf(lang) == -1) {
-            Logger.Error("Translations - Missing lang: " + lang);
+            console.log("Translations - Missing lang: " + lang);
+
+           // return text
         }
 
         // Traduco e sostituisco le variabili
@@ -508,7 +510,7 @@ class Translations {
         }
         catch (Ex) {
             console.log(Ex)
-            
+
             if(parcel.hmr != null)
                 parcel.hmr.emitError(Ex);
         }

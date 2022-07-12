@@ -35,7 +35,7 @@ class TranslationsFile {
 
 				this.Data.Translations = json.data;
 			}catch (ex) {
-				console.log("Error on get translations file: "+ex)
+				console.log('\x1b[31m%s\x1b[0m',"Error on get translations file: "+ex)
 			}
 		}else{
 			console.log("Missing --translations-url-download parameter")
@@ -65,7 +65,7 @@ class TranslationsFile {
 
 	UpdateMissingKeys(){
 		if(this.missingKeys.length>0){
-			var keys = this.missingKeys.join(",");
+			var keys = this.missingKeys.join("%_%");
 			if(this.url != null && this.url != ''){
 				if(this.missingKeysUpdate == false){
 					this.missingKeysUpdate = true
