@@ -3,11 +3,12 @@
   "version": "1.0.18",
   "description": "",
   "main": "./builder.js",
-  "translation_url": "https://hook.eu1.make.com/fkg74gk5r4pkk974939xaifaf3y3wsvi",
+  "translation_url": "https://hook.eu1.make.com/l3p832ev3d8vnow47nug4eczwslq81e4",
+  "files_to_build": "../Sito-3T/html/pages/index.html ../Sito-3T/html/pages/about-us.html ../Sito-3T/html/pages/services.html ../Sito-3T/html/pages/solutions.html ../Sito-3T/html/pages/technologies.html ../Sito-3T/html/pages/careers.html ../Sito-3T/html/pages/jobs.html ../Sito-3T/html/pages/front-end-developer.html ../Sito-3T/html/pages/404.html ../Sito-3T/html/pages/get-estimate.html ../Sito-3T/html/pages/landing.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./builder.js dev ./test/test.html  --public-url /develop --hmr-port 12345 --use-hmr false --translations-url $npm_package_translation_url -c ./test/template_data.js",
-    "release": "./builder.js release ./test/test.html -c ./test/template_data.js --public-url /develop --hmr-port 12345  --translations-url $npm_package_translation_url"
+    "release": "./builder.js release $npm_package_files_to_build --translations-url $npm_package_translation_url"
   },
   "repository": {
     "type": "git",
@@ -15,19 +16,20 @@
   },
   "dependencies": {
     "axios": "^0.21.4",
-    "liquidjs": "^9.28.3",
-    "express": "^4.17.1",
-    "parcel-bundler": "^1.12.5",
-    "posthtml-inline-assets": "^3.1.0",
-    "url-join": "^4.0.1",
     "commander": "^6.2.1",
     "cookie-parser": "^1.4.5",
     "css-purge": "^3.1.8",
+    "express": "^4.17.1",
+    "firebase": "^9.9.0",
     "fs-extra": "^10.0.0",
+    "liquidjs": "^9.28.3",
+    "parcel-bundler": "^1.12.5",
     "posthtml": "^0.15.2",
+    "posthtml-inline-assets": "^3.1.0",
     "recursive-readdir": "^2.2.2",
     "replaceall": "^0.1.6",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "url-join": "^4.0.1"
   },
   "author": "",
   "license": "ISC",
