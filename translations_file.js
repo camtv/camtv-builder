@@ -74,6 +74,7 @@ class TranslationsFile {
 						if(url.length <= 2048){
 							let json = axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
 						}else{
+							console.log(this.missingKeys);
 							console.log("UpdateMissingKeys failed: too much keys missing")
 						}
 					}catch (ex) {
@@ -98,7 +99,7 @@ class TranslationsFile {
 						if(url.length <= 2048){
 							axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
 						}else{
-							console.log("UpdateUsedKeys failed: too much keys missing")
+							console.log("UpdateUsedKeys failed: too much keys")
 						}
 					}catch (ex) {
 						console.log("UpdateUsedKeys failed: "+ ex)
