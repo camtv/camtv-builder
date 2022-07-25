@@ -261,17 +261,23 @@ class Translations {
 
         variables.forEach((variable, i) => {
             const tag = "{" + i + "}";
+            try{
+                let value = variable;
+                if (variable.startsWith('"') || variable.startsWith("'"))
+                    value = eval(variable);
+                else if (variable.startsWith("[") && variable.endsWith("]"))
+                    value = `{%|${variable}|%}`;
+                else
+                    value = variable;
+                if (text.indexOf(tag) == -1){
+                    console.log("Missing parameter inside text: " + text);
+                }
+    
+                text = text.replace(tag, value);
+            }catch(error){
+                console.log("_ReplaceVariables: " + text + "Error " + error );
+            }
 
-            let value = variable;
-            if (variable.startsWith('"') || variable.startsWith("'"))
-                value = eval(variable);
-            else if (variable.startsWith("[") && variable.endsWith("]"))
-                value = `{%|${variable}|%}`;
-            else
-                value = variable;
-            if (text.indexOf(tag) == -1)
-                Logger.Warning("Missing parameter inside text: " + text);
-            text = text.replace(tag, value);
         });
 
         return text;

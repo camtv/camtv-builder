@@ -102,7 +102,7 @@ class TranslationsFile {
 							console.log("UpdateUsedKeys failed: too much keys")
 						}
 					}catch (ex) {
-						console.log("UpdateUsedKeys failed: "+ ex)
+						console.log("UpdateUsedKeys failed")
 					}
 				}
 			}else{
