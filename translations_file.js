@@ -70,13 +70,7 @@ class TranslationsFile {
 				if(this.missingKeysUpdate == false){
 					this.missingKeysUpdate = true
 					try{
-						let url = this.url + "?key=" + encodeURIComponent(keys);
-						if(url.length <= 2048){
-							let json = axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
-						}else{
-							console.log(this.missingKeys);
-							console.log("UpdateMissingKeys failed: too much keys missing")
-						}
+						axios.post(this.url, {"key": this.missingKeys})
 					}catch (ex) {
 						console.log("UpdateMissingKeys failed: "+ ex)
 						console.log(this.missingKeys);
