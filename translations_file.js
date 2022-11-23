@@ -43,9 +43,12 @@ class TranslationsFile {
 		return this.Data;
 	}
 
-	SetUsed(key){
+	SetUsed(key, FileName){
 		if(this.usedKeys.includes(key) == false){
-			this.usedKeys.push(key)
+			this.usedKeys.push({
+				"key": key,
+				"file": FileName
+			})
 		}
 	}
 
@@ -89,12 +92,7 @@ class TranslationsFile {
 				if(this.usedKeysUpdate == false){
 					this.usedKeysUpdate = true
 					try{
-						let url = this.url + "?ukey=" + encodeURIComponent(keys);
-						if(url.length <= 2048){
-							axios(url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
-						}else{
-							console.log("UpdateUsedKeys failed: too much keys")
-						}
+						axios.post(this.url, {"ukey": this.usedKeys})
 					}catch (ex) {
 						console.log("UpdateUsedKeys failed")
 					}

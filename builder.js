@@ -219,7 +219,7 @@ class Translations {
             const text = textVariables[0];
 
             let translation = text;
-            translation = this._Ts(translation, lang);
+            translation = this._Ts(translation, lang, fileName);
             translation = this._ReplaceVariables(translation, variables);
 
             // L'apice lo converto in apostrofo, le virgolette le preservo perchè possono esserci degli elementi html del tipo class="{0}" nelle traduzioni e non voglio tradure i tags
@@ -238,7 +238,7 @@ class Translations {
         return translatedText;
     }
 
-    _Ts(Str, Ln) {
+    _Ts(Str, Ln, FileName) {
         
         if (!this.TranslationData.Translations || Object.keys(this.TranslationData.Translations).length == 0)
             return Str;
@@ -246,7 +246,7 @@ class Translations {
         for (let i = 0; i < this.TranslationData.Translations.length; i++) {
             if (this.TranslationData.Translations[i][this.TranslationData.KeyLang] == Str) {
                 if (this.TranslationData.Translations[i][Ln] != null){
-                    this.TranslationsFile.SetUsed(this.TranslationData.Translations[i][this.TranslationData.KeyLang]);
+                    this.TranslationsFile.SetUsed(this.TranslationData.Translations[i][this.TranslationData.KeyLang], FileName);
                     return this.TranslationData.Translations[i][Ln];
                 }
             }
