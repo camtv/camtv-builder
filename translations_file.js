@@ -92,7 +92,7 @@ class TranslationsFile {
 				if(this.usedKeysUpdate == false){
 					this.usedKeysUpdate = true
 					try{
-						axios.post(this.url, {"ukey": this.usedKeys})
+						//axios.post(this.url, {"ukey": this.usedKeys})
 					}catch (ex) {
 						console.log("UpdateUsedKeys failed")
 					}
