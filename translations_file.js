@@ -4,7 +4,7 @@ const sheets = require('@googleapis/sheets');
 
 class TranslationsFile {
 
-	constructor(url, KeyLang = "en", removeKeyLang = true) {
+	constructor(url, KeyLang = "it", removeKeyLang = true) {
 		this.url = url
 		this.missingKeys = [];
 		this.usedKeys = [];

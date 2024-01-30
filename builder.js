@@ -72,7 +72,7 @@ function ParseCommandLine() {
     cmdLine.option('-n, --hmr-hostname <hmr_hostname>', 'Hostname when in dev mode for autoreload', '')
     cmdLine.option('-ic, --inline-css <css_inline_mode>', 'inline cssmode, purge to purge, no-purge to avoid purging', '')
     cmdLine.option('-td, --translations-url <translations_url>', 'Url that get/set the translation file')
-    cmdLine.option('-tk, --translations-key <translations_key>', 'the key used by the sistem to pair the string in the code with the translated string', 'key')
+    cmdLine.option('-tk, --translations-key <translations_key>', 'the key used by the sistem to pair the string in the code with the translated string', 'it')
     cmdLine.option('-trk, --translations-remove-key <translations_remove_key>', 'a boolean value used to indicate if the key need to be removed from the lang list', true)
     cmdLine.option('-dl, --default-language <default_language>', 'default language that is used for all languages that has no translation', 'en')
 
@@ -84,8 +84,8 @@ function ParseCommandLine() {
     }
     else if (cmdLine.args.length > 0 && cmdLine.args[0] == 'serve') {
         cmdLine.isServing = true;
-        if (cmdLine.outDir.startsWith('/') == false){
-            
+        if (cmdLine.outDir.startsWith('/') == false) {
+
             cmdLine.outDir = Path.join(__dirname, cmdLine.outDir);
         }
 
@@ -135,7 +135,7 @@ class Translations {
 
         if (OutDir.startsWith("./"))
             OutDir = Path.join(process.cwd(), OutDir)
-        
+
         rimraf.sync(OutDir)
         if (!fs.existsSync(OutDir))
             fs.mkdirSync(OutDir);
@@ -148,7 +148,7 @@ class Translations {
                 let source = TranslateCacheDir
 
                 var destination = Path.join(OutDir, "localized-files");
-                
+
                 //rimraf.sync(destination)
                 if (!fs.existsSync(destination))
                     fs.mkdirSync(destination);
@@ -168,7 +168,7 @@ class Translations {
                 this.TranslationsFile.UpdateMissingKeys();
                 this.TranslationsFile.UpdateUsedKeys();
 
-                if(ln == defaultLanguage){
+                if (ln == defaultLanguage) {
                     fse.copySync(destination, OutDir)
 
                 }
@@ -179,7 +179,7 @@ class Translations {
             }
         })
 
-        
+
     }
 
     ProcessFile(lang, fileNameInput, fileNameOutput, publicUrl) {
@@ -195,8 +195,8 @@ class Translations {
 
         let text = fs.readFileSync(fileNameInput, 'utf8')
         text = this.TranslateText(text, lang, fileNameInput)
-        
-        if(publicUrl != '')
+
+        if (publicUrl != '')
             text = replaceall(publicUrl, publicUrlWithLang, text)
         fs.writeFileSync(fileNameOutput, text)
     }
@@ -208,7 +208,7 @@ class Translations {
         if (!this.TranslationData.Langs || this.TranslationData.Langs.indexOf(lang) == -1) {
             console.log("Translations - Missing lang: " + lang);
 
-           // return text
+            // return text
         }
 
         // Traduco e sostituisco le variabili
@@ -239,15 +239,15 @@ class Translations {
     }
 
     _Ts(Str, Ln, FileName) {
-        
+
         if (!this.TranslationData.Translations || Object.keys(this.TranslationData.Translations).length == 0)
             return Str;
 
         for (let i = 0; i < this.TranslationData.Translations.length; i++) {
-            if (this.TranslationData.Translations[i][this.TranslationData.KeyLang] == Str) {
-                if (this.TranslationData.Translations[i][Ln] != null){
-                    this.TranslationsFile.SetUsed(this.TranslationData.Translations[i][this.TranslationData.KeyLang], FileName);
-                    return this.TranslationData.Translations[i][Ln];
+            if (this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(this.TranslationData.KeyLang)] == Str) {
+                if (this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(Ln)] != null) {
+                    this.TranslationsFile.SetUsed(this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(this.TranslationData.KeyLang)], FileName);
+                    return this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(Ln)];
                 }
             }
         }
@@ -261,7 +261,7 @@ class Translations {
 
         variables.forEach((variable, i) => {
             const tag = "{" + i + "}";
-            try{
+            try {
                 let value = variable;
                 if (variable.startsWith('"') || variable.startsWith("'"))
                     value = eval(variable);
@@ -269,13 +269,13 @@ class Translations {
                     value = `{%|${variable}|%}`;
                 else
                     value = variable;
-                if (text.indexOf(tag) == -1){
+                if (text.indexOf(tag) == -1) {
                     console.log("Missing parameter inside text: " + text);
                 }
-    
+
                 text = text.replace(tag, value);
-            }catch(error){
-                console.log("_ReplaceVariables: " + text + "Error " + error );
+            } catch (error) {
+                console.log("_ReplaceVariables: " + text + "Error " + error);
             }
 
         });
@@ -333,8 +333,8 @@ class Translations {
     if (parcel.options.publicURL == null || parcel.options.publicURL == "")
         parcel.options.publicURL = "/";
 
-    if (IsProduction == false){
-        if(cmdLine.useHmr == 'false'){
+    if (IsProduction == false) {
+        if (cmdLine.useHmr == 'false') {
             parcel.options.hmr = false;
             parcel.options.hmrPort = null;
             parcel.options.hmrHostname = null;
@@ -384,19 +384,19 @@ class Translations {
                                     }
                                     else
                                         fnSetNode(node, InCssString)
-                                        
+
                                 }
                             }
                         },
                     })]).process(data);
-                    
+
                     fs.writeFileSync(bundle.name, result.html);
                 }));
             });
         }
         await parcel.bundle();
 
-        if (translator.HasTranslations == true){
+        if (translator.HasTranslations == true) {
             await translator.Process(OutDir, cmdLine.outDir, cmdLine.publicUrl, cmdLine.defaultLanguage);
         }
         // Sostituisce i file css portandoli inline
@@ -405,10 +405,10 @@ class Translations {
     }
 
     let TemplateDataFilePath = cmdLine.templateData;
-    
+
     if (TemplateDataFilePath.startsWith("/") == false)
         TemplateDataFilePath = Path.join(__dirname, cmdLine.templateData);
-    
+
     //TemplateDataFilePath = Path.join(process.cwd(), cmdLine.templateData);
     let TemplateData = null;
     if (fs.existsSync(TemplateDataFilePath)) {
@@ -434,7 +434,7 @@ class Translations {
         });
     }
 
-    if (cmdLine.isServing != true){
+    if (cmdLine.isServing != true) {
         await parcel.serve(parseInt(1233));
     }
 
@@ -517,7 +517,7 @@ class Translations {
         catch (Ex) {
             console.log(Ex)
 
-            if(parcel.hmr != null)
+            if (parcel.hmr != null)
                 parcel.hmr.emitError(Ex);
         }
 
