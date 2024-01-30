@@ -98,7 +98,7 @@ class TranslationsFile {
 				if (this.missingKeysUpdate == false) {
 					this.missingKeysUpdate = true
 					try {
-						axios.post(this.url, { "key": this.missingKeys })
+						// axios.post(this.url, { "key": this.missingKeys })
 					} catch (ex) {
 						console.log("UpdateMissingKeys failed: " + ex)
 						console.log(this.missingKeys);
@@ -117,7 +117,7 @@ class TranslationsFile {
 				if (this.usedKeysUpdate == false) {
 					this.usedKeysUpdate = true
 					try {
-						//axios.post(this.url, {"ukey": this.usedKeys})
+						// axios.post(this.url, {"ukey": this.usedKeys})
 					} catch (ex) {
 						console.log("UpdateUsedKeys failed")
 					}
