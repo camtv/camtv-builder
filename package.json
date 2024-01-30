@@ -1,6 +1,6 @@
 {
   "name": "@camtv/camtv-builder",
-  "version": "1.0.23-google_sheets.0",
+  "version": "1.0.23",
   "description": "",
   "main": "./builder.js",
   "translation_url": "https://hook.eu1.make.com/fkg74gk5r4pkk974939xaifaf3y3wsvi",
