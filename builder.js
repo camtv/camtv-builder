@@ -71,7 +71,8 @@ function ParseCommandLine() {
     cmdLine.option('-nh, --use-hmr <use_hmr>', 'set hrm used by parcel to false', true)
     cmdLine.option('-n, --hmr-hostname <hmr_hostname>', 'Hostname when in dev mode for autoreload', '')
     cmdLine.option('-ic, --inline-css <css_inline_mode>', 'inline cssmode, purge to purge, no-purge to avoid purging', '')
-    cmdLine.option('-td, --translations-url <translations_url>', 'Url that get/set the translation file')
+    cmdLine.option('-gsi, --google-spreadsheet-id <google_spreadsheet_id>', 'The id of the google spreadsheet containing all the translations')
+    cmdLine.option('-mut, --mark-unused-translations', 'Whether or not to mark unused translations')
     cmdLine.option('-tk, --translations-key <translations_key>', 'the key used by the sistem to pair the string in the code with the translated string', 'it')
     cmdLine.option('-trk, --translations-remove-key <translations_remove_key>', 'a boolean value used to indicate if the key need to be removed from the lang list', true)
     cmdLine.option('-dl, --default-language <default_language>', 'default language that is used for all languages that has no translation', 'en')
@@ -120,8 +121,8 @@ class Translations {
         return this.TranslationData.Translations.length > 0
     }
 
-    async LoadTranslations(url, key, removeKey) {
-        this.TranslationsFile = new TranslationsFile(url, key, removeKey);
+    async LoadTranslations(spreadsheetId, key, removeKey, markUnusedTranslations) {
+        this.TranslationsFile = new TranslationsFile(spreadsheetId, key, removeKey, markUnusedTranslations);
         this.TranslationData = await this.TranslationsFile.Get();
 
         /*
@@ -140,9 +141,7 @@ class Translations {
         if (!fs.existsSync(OutDir))
             fs.mkdirSync(OutDir);
 
-
-        this.TranslationData.Langs.forEach(async (ln) => {
-
+        for (const ln of this.TranslationData.Langs) {
             try {
 
                 let source = TranslateCacheDir
@@ -165,20 +164,18 @@ class Translations {
                 files.forEach((file) => {
                     this.ProcessFile(ln, file, file, publicUrl)
                 })
-                this.TranslationsFile.UpdateMissingKeys();
-                this.TranslationsFile.UpdateUsedKeys();
 
                 if (ln == defaultLanguage) {
                     fse.copySync(destination, OutDir)
-
                 }
 
             }
             catch (ex) {
                 console.log(ex)
             }
-        })
-
+        }
+        this.TranslationsFile.UpdateMissingKeys();
+        this.TranslationsFile.UpdateUsedKeys();
 
     }
 
@@ -244,10 +241,13 @@ class Translations {
             return Str;
 
         for (let i = 0; i < this.TranslationData.Translations.length; i++) {
-            if (this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(this.TranslationData.KeyLang)] == Str) {
-                if (this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(Ln)] != null) {
-                    this.TranslationsFile.SetUsed(this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(this.TranslationData.KeyLang)], FileName);
-                    return this.TranslationData.Translations[i][this.TranslationData.Langs.indexOf(Ln)];
+            const currTranslation = this.TranslationData.Translations[i];
+            if (currTranslation[this.TranslationData.Langs.indexOf(this.TranslationData.KeyLang)] == Str) {
+                if (currTranslation[this.TranslationData.Langs.indexOf(Ln)] != null) {
+                    this.TranslationsFile.SetUsed(currTranslation[this.TranslationData.Langs.indexOf(this.TranslationData.KeyLang)], FileName);
+                    return currTranslation[this.TranslationData.Langs.indexOf(Ln)];
+                } else {
+                    return Str;
                 }
             }
         }
@@ -294,7 +294,7 @@ class Translations {
     let translator = new Translations();
     let OutDir = cmdLine.outDir;
 
-    await translator.LoadTranslations(cmdLine.translationsUrl, cmdLine.translationsKey, cmdLine.translationsRemoveKey);
+    await translator.LoadTranslations(cmdLine.googleSpreadsheetId, cmdLine.translationsKey, cmdLine.translationsRemoveKey, cmdLine.markUnusedTranslations);
     if (translator.HasTranslations == true) {
         OutDir = Path.join(__dirname, "translation_cache")
     }

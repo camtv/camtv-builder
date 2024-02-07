@@ -4,8 +4,9 @@ const sheets = require('@googleapis/sheets');
 
 class TranslationsFile {
 
-	constructor(url, KeyLang = "it", removeKeyLang = true) {
-		this.url = url
+	constructor(spreadsheetId, KeyLang = "it", removeKeyLang = true, markUnusedTranslations = false) {
+		this.spreadsheetId = spreadsheetId;
+		this.markUnusedTranslations = markUnusedTranslations;
 		this.missingKeys = [];
 		this.usedKeys = [];
 		this.missingKeysUpdate = false;
@@ -14,27 +15,15 @@ class TranslationsFile {
 		this.Data = {
 			"Langs": [],
 			"KeyLang": KeyLang,
-			"Translations": []
+			"Translations": [],
+			"UnusedTranslations": []
 		}
-		this.agent = new https.Agent({
-			rejectUnauthorized: false
-		});
+		this.client = null;
 	}
 
 	async Get() {
-		if (this.url != null && this.url != '') {
+		if (this.spreadsheetId != null && this.spreadsheetId != '') {
 			try {
-				// let json = await axios(this.url, { headers: { 'Accept': 'application/json' }, httpsAgent: this.agent })
-				// let kvLang = json.data[0];
-				// this.Data.Langs = Object.values(kvLang)
-
-				// if (this.removeKeyLang) {
-				// 	this.Data.Langs = this.Data.Langs.filter(v => v !== this.Data.KeyLang);
-				// }
-
-				// json.data.splice(0, 1)
-
-				// this.Data.Translations = json.data;
 
 				const auth = new sheets.auth.GoogleAuth({
 					keyFilename: 'credentials.json',
@@ -44,31 +33,32 @@ class TranslationsFile {
 
 				const authClient = await auth.getClient();
 
-				const spreadsheetId = '18KCeYmR0r03s0vugL34Q5Zxk40NbfqOrEi5bDRIimf4';
-
-				const client = await sheets.sheets({
+				this.client = sheets.sheets({
 					version: 'v4',
 					auth: authClient
 				});
 
-				const response = await client.spreadsheets.values.get({
-					spreadsheetId,
+				this.response = await this.client.spreadsheets.values.get({
+					spreadsheetId: this.spreadsheetId,
 					range: 'Foglio1!B:H'
 				})
 
-				this.Data.Translations = response.data.values.slice();
+				this.Data.Translations = this.response.data.values.slice();
+				this.Data.UnusedTranslations = this.response.data.values.slice();
 				this.Data.Langs = this.Data.Translations.shift(); // removing heading from translations (languages)
 
 			} catch (ex) {
 				console.log('\x1b[31m%s\x1b[0m', "Error on get translations file: " + ex)
 			}
 		} else {
-			console.log("Missing --translations-url-download parameter")
+			console.log("Missing --google-spreadsheet-id parameter")
 		}
 		return this.Data;
 	}
 
 	SetUsed(key, FileName) {
+		if (this.Data.UnusedTranslations.findIndex(translation => translation[0] == key) != -1)
+			this.Data.UnusedTranslations.splice(this.Data.UnusedTranslations.findIndex(translation => translation[0] == key), 1);
 		if (this.usedKeys.includes(key) == false) {
 			this.usedKeys.push({
 				"key": key,
@@ -94,11 +84,18 @@ class TranslationsFile {
 	UpdateMissingKeys() {
 		if (this.missingKeys.length > 0) {
 			var keys = this.missingKeys.join("%_%");
-			if (this.url != null && this.url != '') {
+			if (this.spreadsheetId != null && this.spreadsheetId != '') {
 				if (this.missingKeysUpdate == false) {
 					this.missingKeysUpdate = true
 					try {
-						// axios.post(this.url, { "key": this.missingKeys })
+						this.client.spreadsheets.values.append({
+							spreadsheetId: this.spreadsheetId,
+							range: `Foglio1!B${this.response.data.values.length + 1}`,
+							valueInputOption: 'USER_ENTERED',
+							resource: {
+								values: this.missingKeys.map(missingTranslation => [missingTranslation])
+							}
+						})
 					} catch (ex) {
 						console.log("UpdateMissingKeys failed: " + ex)
 						console.log(this.missingKeys);
@@ -111,19 +108,29 @@ class TranslationsFile {
 	}
 
 	UpdateUsedKeys() {
-		if (this.usedKeys.length > 0) {
-			var keys = this.usedKeys.join(",");
-			if (this.url != null && this.url != '') {
+		if (this.Data.UnusedTranslations.length > 0) {
+			if (this.spreadsheetId != null && this.spreadsheetId != '' && this.markUnusedTranslations) {
 				if (this.usedKeysUpdate == false) {
 					this.usedKeysUpdate = true
 					try {
-						// axios.post(this.url, {"ukey": this.usedKeys})
+						this.Data.UnusedTranslations.shift();
+						this.Data.UnusedTranslations.forEach(async (unusedTranslation, i) => {
+							const row = this.Data.Translations.findIndex(translation => unusedTranslation[0] == translation[0]) + 2;
+							this.client.spreadsheets.values.update({
+								spreadsheetId: this.spreadsheetId,
+								range: `Foglio1!A${row}`,
+								valueInputOption: 'USER_ENTERED',
+								resource: {
+									values: [["no"]]
+								}
+							})
+						})
 					} catch (ex) {
 						console.log("UpdateUsedKeys failed")
 					}
 				}
 			} else {
-				console.log("Cannot set Used Translation Key: " + keys)
+				console.log("Cannot set Used Translation Key: " + this.Data.UnusedTranslations)
 			}
 		}
 	}

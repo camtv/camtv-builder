@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    {% if Item.SEOKeys and Item.SEOKeys != "" %}
-	<!-- UIA24-53 -->
-	<meta name="keywords" content="{{ Item.SEOKeys }}" >
-	{% endif %}
+        {% if Item.SEOKeys and Item.SEOKeys != "" %}
+        <!-- UIA24-53 -->
+        <meta name="keywords" content="{{ Item.SEOKeys }}" />
+        {% endif %}
 
-    <title>{%T|In Diretta|%}</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <script src='test.js'></script>
-</head>
-<body>
-    {%T|In Diretta|%}
-    {%T|missing key|%}
-    {{ Sets.EXAMPLE }}
+        <title>{%T|In Diretta|%}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="test.js"></script>
+    </head>
+    <body>
+        <p>{%T|Benvenuto in diretta|%}</p>
+        <p>{%T|missing key|%}</p>
+        <p>{{ Sets.EXAMPLE }}</p>
 
-    <script src="https://camtv-dev-static.web.app/libs/theme/theme.min.js"></script>
-    <script src="https://camtv-dev-static.web.app/libs/notifier/notifier.js"></script>
-    <script src="https://camtv-dev-static.web.app/js/three_tech_jquery_extensions.js"></script>
-    <script src="https://camtv-dev-static.web.app/js/scroll.js"></script>
-    <script src="https://camtv-dev-static.web.app/libs/buttonWaitMode/button_wait_mode.min.js"></script>
-</body>
+        <script src="https://camtv-dev-static.web.app/libs/theme/theme.min.js"></script>
+        <script src="https://camtv-dev-static.web.app/libs/notifier/notifier.js"></script>
+        <script src="https://camtv-dev-static.web.app/js/three_tech_jquery_extensions.js"></script>
+        <script src="https://camtv-dev-static.web.app/js/scroll.js"></script>
+        <script src="https://camtv-dev-static.web.app/libs/buttonWaitMode/button_wait_mode.min.js"></script>
+    </body>
 </html>
