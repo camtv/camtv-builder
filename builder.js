@@ -459,7 +459,7 @@ class Translations {
         let req_query_data = parsedurl.query ? parsedurl.query["data"] : null;
         console.log(req_query_data)
         if (entryFiles.length > 1) {
-            if ((req_url == parcel.options.publicURL || req_url + "/" == parcel.options.publicURL || req_url == parcel.options.publicURL + "/" || req_url == parcel.options.publicURL + "/index.html") && entryFiles.indexOf("index.html") < 0) {
+            if ((req_url == parcel.options.publicURL || req_url + "/" == parcel.options.publicURL || req_url == parcel.options.publicURL + "/") && entryFiles.indexOf("index.html") < 0) {
                 let content = ""
                 entryFiles.forEach((el) => {
                     let sUrl = urljoin(parcel.options.publicURL, el.replace(process.cwd(), ""));
