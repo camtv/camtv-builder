@@ -296,7 +296,7 @@ class Translations {
 
     await translator.LoadTranslations(cmdLine.googleSpreadsheetId, cmdLine.translationsKey, cmdLine.translationsRemoveKey, cmdLine.markUnusedTranslations);
     if (translator.HasTranslations == true) {
-        OutDir = Path.join(__dirname, "translation_cache")
+        OutDir = Path.join(process.cwd(), "translation_cache")
     }
 
     let option = {
@@ -407,7 +407,7 @@ class Translations {
     let TemplateDataFilePath = cmdLine.templateData;
 
     if (TemplateDataFilePath.startsWith("/") == false)
-        TemplateDataFilePath = Path.join(__dirname, cmdLine.templateData);
+        TemplateDataFilePath = Path.join(process.cwd(), cmdLine.templateData);
 
     //TemplateDataFilePath = Path.join(process.cwd(), cmdLine.templateData);
     let TemplateData = null;
@@ -441,7 +441,7 @@ class Translations {
     let entries = ['/', '/index.html'];
     entryFiles.forEach((el) => {
         if (entries.indexOf(el) < 0)
-            entries.push(el.replace(__dirname, ""))
+            entries.push(el.replace(process.cwd(), ""))
     })
 
     for (let i = 0; i < entries.length; i++) {
@@ -462,8 +462,8 @@ class Translations {
             if ((req_url == parcel.options.publicURL || req_url + "/" == parcel.options.publicURL || req_url == parcel.options.publicURL + "/" || req_url == parcel.options.publicURL + "/index.html") && entryFiles.indexOf("index.html") < 0) {
                 let content = ""
                 entryFiles.forEach((el) => {
-                    let sUrl = urljoin(parcel.options.publicURL, el.replace(__dirname, ""));
-                    content += `<li><a href="${sUrl}">${el.replace(__dirname, "")}</a></li>`
+                    let sUrl = urljoin(parcel.options.publicURL, el.replace(process.cwd(), ""));
+                    content += `<li><a href="${sUrl}">${el.replace(process.cwd(), "")}</a></li>`
                 })
                 content = `
 						<style>body { padding: 10px; font-family:sans-serif; } h1 {text-align: center;} .centered{ max-width: 700px; margin:auto; line-height: 2;}</style>
@@ -479,7 +479,7 @@ class Translations {
             }
         }
         else
-            file = entryFiles[0].replace(__dirname, "")
+            file = entryFiles[0].replace(process.cwd(), "")
 
         let pathfile = file.split('/')
         file = pathfile[pathfile.length - 1];
