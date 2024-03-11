@@ -1,6 +1,6 @@
 {
   "name": "@camtv/camtv-builder",
-  "version": "1.0.26-gs.2",
+  "version": "1.0.26-gs.3",
   "description": "",
   "main": "./builder.js",
   "google_spreadsheet_id": "1XUOpRTSXupvie6h5Rb1RzIhRGtT6ACG5RLojZVPX6U8",
