@@ -130,7 +130,7 @@ class TranslationsFile {
 					}
 				}
 			} else {
-				console.log("Cannot set Used Translation Key: " + this.Data.UnusedTranslations)
+				// console.log("Cannot set Used Translation Key: " + this.Data.UnusedTranslations)
 			}
 		}
 	}
