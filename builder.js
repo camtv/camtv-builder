@@ -318,7 +318,6 @@ class Translations {
         logLevel: 3, // 5 = save everything to a file, 4 = like 3, but with timestamps and additionally log http requests to dev server, 3 = log info, warnings & errors, 2 = log warnings & errors, 1 = log errors, 0 = log nothing
         hmr: IsProduction == false, // Enable or disable HMR while watching
         hmrPort: cmdLine.hmrPort, // The port the HMR socket runs on, defaults to a random free port (0 in node.js resolves to a random free port)
-        sourceMaps: IsProduction == false, // Enable or disable sourcemaps, defaults to enabled (minified builds currently always create sourcemaps)
         hmrHostname: cmdLine.hmrHostname, // A hostname for hot module reload, default to ''
         detailedReport: IsProduction == true, // Prints a detailed report of the bundles, assets, filesizes and times, defaults to false, reports are only printed if watch is disabled
         autoInstall: true, // Enable or disable auto install of missing dependencies found during bundling
